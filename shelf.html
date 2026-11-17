@@ -41,29 +41,33 @@ a{color:inherit;}
 .sec-kicker .dot{width:5px; height:5px; background:var(--seed); border-radius:50%;}
 .sec-sub{font-size:14px; color:var(--muted); margin-top:12px; max-width:56ch; line-height:1.85;}
 
-/* shelf stage */
-.stage{margin-top:20px; display:flex; align-items:flex-end; overflow-x:auto; overflow-y:hidden; padding:56px 8px 22px; scrollbar-width:none; scroll-behavior:smooth; border-bottom:1px solid var(--line);}
-.stage::-webkit-scrollbar{display:none;}
-.book{flex:0 0 auto; display:flex; align-items:stretch; margin-right:-6px; cursor:pointer; position:relative; transition:transform .5s var(--ease); animation:book-in .7s var(--ease) both;}
-.book:nth-child(1){animation-delay:.02s} .book:nth-child(2){animation-delay:.07s} .book:nth-child(3){animation-delay:.12s}
-.book:nth-child(4){animation-delay:.17s} .book:nth-child(5){animation-delay:.22s} .book:nth-child(6){animation-delay:.27s}
-@keyframes book-in{from{opacity:0; transform:translateY(16px);} to{opacity:1; transform:none;}}
-.book:hover{transform:translateY(-8px);}
-.book .spine{width:24px; height:214px; background:linear-gradient(90deg,#E8E4D6,var(--spine) 55%,#E2DDCE); border:1px solid var(--line); border-right:none; border-radius:2px 0 0 2px; display:flex; flex-direction:column; align-items:center; padding:10px 0 12px; gap:8px; color:var(--ink);}
-body.night .book .spine{background:linear-gradient(90deg,#2E2E29,var(--spine) 55%,#282824);}
-.book .snum{font-family:var(--mono); font-size:8px; letter-spacing:.08em; color:var(--muted);}
-.book .stitle{writing-mode:vertical-rl; font-family:var(--serif); font-size:11px; font-weight:600; letter-spacing:3px; line-height:1.1; flex:1; overflow:hidden; white-space:nowrap;}
-.book .scirc{width:6px; height:6px; border:1px solid var(--muted); border-radius:50%; flex:0 0 auto;}
-.book .cover{width:14px; height:214px; overflow:hidden; position:relative; transition:width .5s var(--ease); border-radius:0 2px 2px 0; box-shadow:2px 4px 14px rgba(30,30,25,.14);}
-.book .cover-inner{width:120px; height:100%; padding:13px 12px; display:flex; flex-direction:column; color:var(--cover-ink);}
-.book .cov-top{display:flex; justify-content:space-between; font-family:var(--mono); font-size:8px; letter-spacing:.1em; opacity:.85;}
-.book .cov-title{margin-top:18px; font-family:var(--serif); font-size:21px; font-weight:700; line-height:1.45; letter-spacing:.04em;}
-.book .cov-author{margin-top:9px; font-size:11px; opacity:.8;}
-.book .cov-foot{margin-top:auto; font-family:var(--mono); font-size:8px; letter-spacing:.1em; opacity:.85; display:flex; flex-direction:column; gap:4px;}
-.book.sel{transform:translateY(-30px); z-index:99 !important;}
-.book.sel .cover{width:120px;}
-.book.sel::before{content:""; position:absolute; top:-8px; left:24px; right:0; height:8px; background:linear-gradient(180deg,#FBFAF4,#E9E5D8); border:1px solid var(--line); border-bottom:none; transform:skewX(-38deg); transform-origin:bottom left; border-radius:2px 2px 0 0;}
-body.night .book.sel::before{background:linear-gradient(180deg,#2E2E29,#242420);}
+/* shelf stage — 3D oblique carousel（复刻 Wenku8 立体书架） */
+.stage3d{position:relative; width:100%; max-width:520px; margin:20px auto 0; overflow:hidden; cursor:grab; -webkit-user-select:none; user-select:none; touch-action:pan-y; border-bottom:1px solid var(--line);}
+.stage3d.grabbing{cursor:grabbing;}
+.stage3d .floor{position:absolute; left:0; right:0; bottom:0; height:1px; background:var(--line);}
+.stage3d .fade-l,.stage3d .fade-r{position:absolute; top:0; bottom:0; width:44px; pointer-events:none; z-index:40;}
+.stage3d .fade-l{left:0; background:linear-gradient(90deg,var(--paper),transparent);}
+.stage3d .fade-r{right:0; background:linear-gradient(-90deg,var(--paper),transparent);}
+.vol{position:absolute; left:0; top:0; width:0; height:0;}
+.vol .f-cover,.vol .f-spine,.vol .f-top,.vol .f-floor{position:absolute; left:0; top:0; transform-origin:0 0; box-sizing:border-box; will-change:transform,clip-path;}
+.vol .f-cover,.vol .f-spine{pointer-events:auto; cursor:pointer;}
+.vol .f-top,.vol .f-floor{pointer-events:none;}
+.vol .f-top{background:linear-gradient(90deg,#E3DFD3,#FEFDF8);}
+body.night .vol .f-top{background:linear-gradient(90deg,#3A3A3A,#2D2D2D);}
+.vol .f-floor{background:linear-gradient(225deg,rgba(31,31,28,.10),rgba(31,31,28,0));}
+body.night .vol .f-floor{background:linear-gradient(225deg,rgba(0,0,0,.30),rgba(0,0,0,0));}
+.vol .f-cover{display:flex; flex-direction:column; background:#FEFDF8; border:1px solid var(--line);}
+body.night .vol .f-cover{background:#242424;}
+.vol .f-spine{display:flex; flex-direction:column; align-items:center; background:#F2F0E9; border:1px solid var(--line);}
+body.night .vol .f-spine{background:#2D2D2D;}
+.fc-top{display:flex; justify-content:space-between; font-family:var(--mono); font-size:8px; letter-spacing:.06em; color:var(--muted);}
+.fc-cover{flex:1; margin:7px 0 4px; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:8px 6px; overflow:hidden; color:#F6F3E8;}
+.fc-cover .t{font-family:var(--serif); font-size:14px; font-weight:700; line-height:1.35; text-align:center; letter-spacing:.04em;}
+.fc-cover .a{font-size:9px; opacity:.85; margin-top:6px; text-align:center;}
+.fc-code{font-family:var(--mono); font-size:8px; letter-spacing:.06em; color:var(--muted);}
+.fs-num{font-family:var(--mono); font-size:9px; color:var(--muted); line-height:1.35;}
+.fs-title{flex:1; display:flex; align-items:center; justify-content:center; font-family:var(--serif); font-size:9px; font-weight:600; line-height:1.12; text-align:center; white-space:pre-line; overflow:hidden; color:var(--ink);}
+.fs-dot{width:6px; height:6px; border:1px solid var(--muted); border-radius:50%; flex:0 0 auto;}
 .stage-empty{padding:40px 4px 20px; color:var(--muted); font-size:14px; line-height:1.9; max-width:48ch;}
 
 /* info block */
@@ -106,8 +110,8 @@ footer{margin-top:64px; color:var(--muted); font-size:11px; text-align:center; f
 .rbtn{border:1px solid var(--line); background:transparent; color:var(--ink); border-radius:2px; padding:7px 12px; font-size:12px; cursor:pointer; font-family:var(--mono); letter-spacing:.08em; white-space:nowrap; transition:border-color .25s var(--ease), color .25s var(--ease);}
 .rbtn:hover{border-color:var(--seed); color:var(--seed);}
 #rScroll{flex:1; overflow-y:auto;}
-.rinner{max-width:700px; margin:0 auto; padding:44px 28px 110px;}
-.para{font-family:var(--serif); font-size:var(--rfs); line-height:2; margin:0 0 1.1em; text-indent:2em; content-visibility:auto; contain-intrinsic-size:auto 120px;}
+.rinner{position:relative; max-width:700px; margin:0 auto; padding:44px 28px 110px;}
+.para{font-family:var(--serif); font-size:var(--rfs); line-height:2; margin:0 0 1.1em; text-indent:2em;}
 .para.chap{text-indent:0; font-weight:700; font-size:calc(var(--rfs) + 4px); margin-top:2em; color:var(--ink); letter-spacing:.02em;}
 .rfoot{padding:10px 20px; border-top:1px solid var(--line); background:var(--surface); display:flex; justify-content:space-between; font-family:var(--mono); font-size:9px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted);}
 #toc{position:fixed; top:0; right:0; bottom:0; width:min(340px,86vw); background:var(--surface); z-index:210; box-shadow:-12px 0 40px rgba(0,0,0,.16); transform:translateX(105%); transition:transform .35s var(--ease); display:flex; flex-direction:column;}
@@ -121,12 +125,19 @@ footer{margin-top:64px; color:var(--muted); font-size:11px; text-align:center; f
 .tnone{padding:20px; color:var(--muted); font-size:13px; line-height:1.8;}
 .rloading{text-align:center; color:var(--muted); padding:80px 0; font-size:14px;}
 
+/* 翻页模式 */
+#rScroll.paged{overflow:hidden; position:relative; touch-action:pan-y;}
+.rinner.paged{display:flex; flex-direction:row; align-items:flex-start; max-width:none; margin:0; padding:0; width:max-content; will-change:transform;}
+.rinner.paged.anim{transition:transform .48s cubic-bezier(.2,.72,.2,1);}
+.rinner.paged .page{flex:0 0 auto; box-sizing:border-box; padding:44px 28px 64px; overflow:hidden;}
+.rinner.paged .page .para{width:100%; max-width:700px; margin-left:auto; margin-right:auto;}
+.tap-zone{position:absolute; top:0; bottom:0; width:20%; z-index:6; cursor:pointer; display:none; -webkit-tap-highlight-color:transparent;}
+#rScroll.paged .tap-zone{display:block;}
+.tap-zone.tap-prev{left:0;}
+.tap-zone.tap-next{right:0;}
+
 @media (max-width:680px){
   .wrap{padding:30px 20px 64px;}
-  .stage{padding:44px 4px 18px;}
-  .book .spine{height:184px; width:22px;}
-  .book .cover{height:184px;}
-  .book.sel{transform:translateY(-24px);}
   .rbar{gap:6px; padding:10px 12px; flex-wrap:wrap;}
   .rinner{padding:30px 20px 90px;}
   .row:hover{padding-left:8px;}
@@ -184,10 +195,11 @@ footer{margin-top:64px; color:var(--muted); font-size:11px; text-align:center; f
     <div class="rtitle"><b id="rTitle"></b><span id="rChapter"></span></div>
     <button class="rbtn" id="fontDown">A−</button>
     <button class="rbtn" id="fontUp">A＋</button>
+    <button class="rbtn" id="pageBtn">翻页</button>
     <button class="rbtn" id="nightBtn">夜间</button>
     <button class="rbtn" id="tocBtn">目录</button>
   </div>
-  <div id="rScroll"><div class="rinner" id="rInner"><div class="rloading">正在翻开这本书…</div></div></div>
+  <div id="rScroll"><div class="rinner" id="rInner"><div class="rloading">正在翻开这本书…</div></div><div class="tap-zone tap-prev" id="tapPrev"></div><div class="tap-zone tap-next" id="tapNext"></div></div>
   <div class="rfoot"><span id="rCode"></span><span id="rPct">0%</span></div>
 </div>
 
@@ -226,6 +238,119 @@ function progressOf(book){
   return v === null ? -1 : parseInt(v, 10);
 }
 
+/* ---------- 3D 立体书架：几何（复刻 Wenku8 斜轴投影） ---------- */
+const GEO = { maxViewportWidth: 520, depthX: 0.66, depthY: -0.30, rowStep: 2.5, radius: 1.48 };
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const clampD = v => clamp(v, 0, 1);
+const easeOutCubic = u => 1 - Math.pow(1 - u, 3);
+function interval(a, b, t){ return clampD((t - a) / (b - a)); }
+function cubicBezier(p1x, p1y, p2x, p2y){
+  return function(x){
+    let t = x;
+    for (let i = 0; i < 8; i++){
+      const a = 3 * (1 - t) * (1 - t) * t, b = 3 * (1 - t) * t * t, c = t * t * t;
+      const xt = a * p1x + b * p2x + c;
+      const dx = 3 * (1 - t) * (1 - t) * p1x + 6 * (1 - t) * t * (p2x - p1x) + 3 * t * t * (1 - p2x);
+      if (Math.abs(dx) < 1e-6) break;
+      t -= (xt - x) / dx;
+    }
+    t = clampD(t);
+    const a = 3 * (1 - t) * (1 - t) * t, b = 3 * (1 - t) * t * t, c = t * t * t;
+    return a * p1y + b * p2y + c;
+  };
+}
+function spineFor(w){ return clamp(w * 0.043, 14, 18); }
+function pitchFor(w){ return spineFor(w) + 11; }
+function coverFor(w){ return clamp(w * 0.32, 100, 128); }
+function bodyHeight(c){ return (c - 20) * 166 / 118 + 54; }
+function footprint(s, c){ return s + c * GEO.depthX; }
+function pullDistance(c){ return c * 0.84; }
+function baseY(c, h){ return -c * GEO.depthY + h * 0.60 + 12; }
+function rowHeight(c, h){ return baseY(c, h) + h + 60; }
+function railY(d){ d = clamp(d, -7, 7); return d * GEO.rowStep + d * d * 0.45; }
+function originOf(c, h, weight){
+  const pull = pullDistance(c) * weight * (1.24 - 0.24 * weight);
+  const lift = weight * weight * (3 - 2 * weight);
+  return { x: -pull * GEO.depthX, y: baseY(c, h) - pull * GEO.depthY - h * 0.60 * lift };
+}
+function weightOf(distance, crest){
+  if (distance >= GEO.radius) return 0;
+  const v = Math.cos(distance / GEO.radius * Math.PI / 2);
+  return v * v * crest;
+}
+function assemblyOf(d, viewport, pitch, entrance){
+  if (entrance >= 1) return { x: 0, y: 0 };
+  const order = clamp(d + viewport / pitch / 2 + 2, 0, 16);
+  const st = order * 0.018;
+  const prog = easeOutCubic(interval(st, st + 0.52, entrance));
+  const m = 56 * (1 - prog);
+  return { x: GEO.depthX * m, y: GEO.depthY * m };
+}
+let carousel = null;
+let rafId = null, rafRunning = false;
+function requestPaint(){ if (rafRunning) return; rafRunning = true; rafId = requestAnimationFrame(step); }
+function step(now){
+  let active = false;
+  const c = carousel;
+  if (c){
+    if (c.entrance < 1){
+      c.entrance = clampD((now - c.entranceStart) / 720);
+      if (c.entrance < 1) active = true;
+    }
+    if (c.target){
+      const t = clampD((now - c.target.start) / c.target.dur);
+      const e = c.target.ease(t);
+      c.focus = c.target.from + (c.target.to - c.target.from) * e;
+      if (t >= 1){ c.focus = c.target.to; c.target = null; }
+      else active = true;
+    }
+    paintShelf(c);
+  }
+  if (active || (c && c.dragging)){
+    rafId = requestAnimationFrame(step);
+  } else {
+    rafRunning = false;
+  }
+}
+function paintShelf(c){
+  const crest = c.entrance >= 1 ? 1 : easeOutCubic(interval(0.38, 1, c.entrance));
+  const newSel = clamp(Math.round(c.focus), 0, c.count - 1);
+  if (newSel !== sel){ sel = newSel; updateInfo(); }
+  for (const v of c.vols){
+    const d = v.i - c.focus;
+    const w = weightOf(Math.abs(d), crest);
+    const o = originOf(c.cover, c.height, w);
+    const asm = assemblyOf(d, c.viewport, c.pitch, c.entrance);
+    const ox = c.start + d * c.pitch + asm.x;
+    const oy = railY(d) + asm.y;
+    v.fSpine.style.transform = "matrix(1,0.10,0,1," + (ox + o.x) + "," + (oy + o.y) + ")";
+    v.fCover.style.transform = "matrix(0.66,-0.30,0,1," + (ox + o.x + c.spine) + "," + (oy + o.y + 0.10 * c.spine) + ")";
+    applyTopFace(v.fTop, ox + o.x, oy + o.y, c.spine, c.cover);
+    applyFloorFace(v.fFloor, ox, oy + baseY(c.cover, c.height) + c.height, c.spine, c.cover);
+  }
+}
+function applyTopFace(el, x0, y0, spine, cover){
+  const p0 = [x0, y0];
+  const p1 = [x0 + spine, y0 + 0.10 * spine];
+  const p2 = [x0 + spine + GEO.depthX * cover, y0 + 0.10 * spine + GEO.depthY * cover];
+  const p3 = [x0 + GEO.depthX * cover, y0 + GEO.depthY * cover];
+  clipPoly(el, [p0, p1, p2, p3]);
+}
+function applyFloorFace(el, x0, y0, spine, cover){
+  const dx = GEO.depthX * cover, dy = GEO.depthY * cover;
+  const pts = [[0,0],[spine,1.4],[spine+dx,1.4+dy],[dx,dy],[dx-10,dy+10],[-10,10]];
+  clipPoly(el, pts.map(p => [x0 + p[0], y0 + p[1]]));
+}
+function clipPoly(el, pts){
+  const xs = pts.map(p => p[0]), ys = pts.map(p => p[1]);
+  const minX = Math.min.apply(null, xs), maxX = Math.max.apply(null, xs);
+  const minY = Math.min.apply(null, ys), maxY = Math.max.apply(null, ys);
+  el.style.left = minX + "px";
+  el.style.top = minY + "px";
+  el.style.width = (maxX - minX) + "px";
+  el.style.height = (maxY - minY) + "px";
+  el.style.clipPath = "polygon(" + pts.map(p => (p[0]-minX) + "px " + (p[1]-minY) + "px").join(",") + ")";
+}
 /* ---------- shelf ---------- */
 function renderShelf(){
   const stage = $("stage");
@@ -234,25 +359,10 @@ function renderShelf(){
   if (!books.length){
     stage.innerHTML = '<div class="stage-empty">书架还空着。<br>站长把作品的 txt 放进仓库的 books 文件夹、再在 books_index.json 里加一条记录，第一本书就会立在这里。</div>';
     $("info").style.display = "none";
+    carousel = null;
+    return;
   }
-  books.forEach((b, i) => {
-    const el = document.createElement("div");
-    el.className = "book" + (i === sel ? " sel" : "");
-    el.style.zIndex = i + 1;
-    el.innerHTML =
-      '<div class="spine"><span class="snum">N' + pad(i + 1, 2) + '</span>' +
-      '<span class="stitle"></span><span class="scirc"></span></div>' +
-      '<div class="cover" style="background:' + PALETTE[i % PALETTE.length] + '"><div class="cover-inner">' +
-      '<div class="cov-top"><span>NO.' + pad(i + 1, 3) + '</span><span>本地</span></div>' +
-      '<div class="cov-title"></div><div class="cov-author"></div>' +
-      '<div class="cov-foot"><span>' + wkCode(i) + '</span><span class="cov-prog"></span></div>' +
-      '</div></div>';
-    el.querySelector(".stitle").textContent = b.title;
-    el.querySelector(".cov-title").textContent = b.title;
-    el.querySelector(".cov-author").textContent = b.author || "";
-    el.addEventListener("click", () => { if (i === sel) openReader(b); else select(i, true); });
-    stage.appendChild(el);
-  });
+  carousel = createCarousel(stage, books);
   const list = $("bookList");
   list.innerHTML = "";
   books.forEach((b, i) => {
@@ -261,20 +371,169 @@ function renderShelf(){
     row.innerHTML = '<div><div class="row-title"></div><div class="row-sub"></div></div><div class="row-code">' + wkCode(i) + '</div>';
     row.querySelector(".row-title").textContent = b.title;
     row.querySelector(".row-sub").textContent = (b.author || "") + (b.date ? " · " + b.date : "") + (b.summary ? " · " + b.summary : "");
-    row.addEventListener("click", () => { select(i, true); openReader(b); });
+    row.addEventListener("click", () => { setFocus(i); openReader(b); });
     list.appendChild(row);
   });
   updateInfo();
 }
-function select(i, scroll){
-  sel = Math.max(0, Math.min(books.length - 1, i));
-  document.querySelectorAll(".book").forEach((el, j) => el.classList.toggle("sel", j === sel));
-  if (scroll){
-    const el = document.querySelectorAll(".book")[sel];
-    if (el) $("stage").scrollTo({left: el.offsetLeft - $("stage").clientWidth / 2 + 60, behavior: "smooth"});
-  }
-  updateInfo();
+function createCarousel(stage, books){
+  const count = books.length;
+  const viewport = Math.max(220, Math.min(stage.clientWidth, GEO.maxViewportWidth));
+  const spine = spineFor(viewport);
+  const pitch = pitchFor(viewport);
+  const cover = coverFor(viewport);
+  const height = bodyHeight(cover);
+  const rheight = rowHeight(cover, height);
+  const start = viewport / 2 - footprint(spine, cover) / 2 + pullDistance(cover) * GEO.depthX;
+
+  const root = document.createElement("div");
+  root.className = "stage3d";
+  root.style.height = rheight + "px";
+  const floor = document.createElement("div"); floor.className = "floor";
+  const fadeL = document.createElement("div"); fadeL.className = "fade-l";
+  const fadeR = document.createElement("div"); fadeR.className = "fade-r";
+  root.appendChild(floor); root.appendChild(fadeL); root.appendChild(fadeR);
+
+  const vols = [];
+  books.forEach((b, i) => {
+    const vol = document.createElement("div");
+    vol.className = "vol";
+    vol.style.zIndex = i + 1;
+
+    const fFloor = document.createElement("div");
+    fFloor.className = "f-floor";
+
+    const fCover = document.createElement("div");
+    fCover.className = "f-cover";
+    fCover.style.width = cover + "px";
+    fCover.style.height = height + "px";
+    fCover.innerHTML =
+      '<div class="fc-top"><span>NO.' + pad(i + 1, 3) + '</span><span>本地</span></div>' +
+      '<div class="fc-cover" style="background:' + PALETTE[i % PALETTE.length] + '"><div class="t"></div><div class="a"></div></div>' +
+      '<div class="fc-code">' + wkCode(i) + '</div>';
+    fCover.querySelector(".t").textContent = b.title;
+    fCover.querySelector(".a").textContent = b.author || "";
+
+    const fTop = document.createElement("div");
+    fTop.className = "f-top";
+
+    const fSpine = document.createElement("div");
+    fSpine.className = "f-spine";
+    fSpine.style.width = spine + "px";
+    fSpine.style.height = height + "px";
+    const glyphs = Array.from(b.title || "");
+    let spineTitle = glyphs.slice(0, 7).join("\n");
+    if (glyphs.length > 7) spineTitle += "\n…";
+    fSpine.innerHTML = '<span class="fs-num">' + pad(i + 1, 2) + '</span><span class="fs-title"></span><span class="fs-dot"></span>';
+    fSpine.querySelector(".fs-title").textContent = spineTitle;
+
+    vol.appendChild(fFloor);
+    vol.appendChild(fCover);
+    vol.appendChild(fTop);
+    vol.appendChild(fSpine);
+    root.appendChild(vol);
+
+    const onClick = () => { if (!carousel || carousel.moved) return; onBookTap(i); };
+    fSpine.addEventListener("click", onClick);
+    fCover.addEventListener("click", onClick);
+
+    vols.push({ b, i, vol, fFloor, fCover, fTop, fSpine });
+  });
+
+  stage.appendChild(root);
+
+  const state = {
+    count, viewport, spine, pitch, cover, height, rheight, start,
+    root, vols,
+    focus: clamp(Math.round(sel), 0, count - 1),
+    target: null,
+    entrance: 0, entranceStart: performance.now(),
+    dragging: false, moved: false,
+  };
+  sel = state.focus;
+  wireCarousel(state);
+  requestPaint();
+  return state;
 }
+function wireCarousel(c){
+  const root = c.root;
+  let downX = 0, downFocus = 0, lastT = 0, lastX = 0, vel = 0;
+  const onDown = e => {
+    if (c.count < 2) return;
+    c.dragging = true; c.moved = false;
+    downX = e.clientX; downFocus = c.focus;
+    lastT = performance.now(); lastX = e.clientX; vel = 0;
+    c.target = null;
+    root.classList.add("grabbing");
+    requestPaint();
+  };
+  const onMove = e => {
+    if (!c.dragging) return;
+    const dx = e.clientX - downX;
+    if (Math.abs(dx) > 4) c.moved = true;
+    c.focus = clamp(downFocus - dx / c.pitch, 0, c.count - 1);
+    const now = performance.now();
+    const dt = now - lastT;
+    if (dt > 0){ vel = (e.clientX - lastX) / dt; lastT = now; lastX = e.clientX; }
+    requestPaint();
+  };
+  const onUp = () => {
+    if (!c.dragging) return;
+    c.dragging = false;
+    root.classList.remove("grabbing");
+    if (c.moved) settleAfterFling(c, vel);
+    else animateFocusTo(Math.round(c.focus), 240);
+  };
+  root.addEventListener("pointerdown", onDown);
+  window.addEventListener("pointermove", onMove);
+  window.addEventListener("pointerup", onUp);
+  root.addEventListener("wheel", e => {
+    if (c.count < 2) return;
+    e.preventDefault();
+    const dir = (e.deltaY || e.deltaX) > 0 ? 1 : -1;
+    const base = c.target ? c.target.to : Math.round(c.focus);
+    animateFocusTo(base + dir, 320);
+  }, { passive: false });
+  root.tabIndex = 0;
+  root.addEventListener("keydown", e => {
+    if (e.key === "ArrowLeft"){ animateFocusTo(Math.round(c.focus) - 1, 300); e.preventDefault(); }
+    else if (e.key === "ArrowRight"){ animateFocusTo(Math.round(c.focus) + 1, 300); e.preventDefault(); }
+    else if (e.key === "Enter" || e.key === " "){ onBookTap(Math.round(c.focus)); e.preventDefault(); }
+  });
+}
+function onBookTap(i){
+  if (!carousel) return;
+  if (Math.round(carousel.focus) === i) openReader(books[i]);
+  else animateFocusTo(i, 380);
+}
+function animateFocusTo(target, dur){
+  if (!carousel) return;
+  target = clamp(target, 0, carousel.count - 1);
+  const from = carousel.focus;
+  carousel.entrance = 1;
+  if (dur === 0 || from === target){
+    carousel.focus = target;
+    sel = target;
+    updateInfo();
+    requestPaint();
+    return;
+  }
+  carousel.target = { from, to: target, start: performance.now(), dur: dur, ease: cubicBezier(0.2, 1.06, 0.35, 1) };
+  requestPaint();
+}
+function settleAfterFling(c, vel){
+  const vFocus = -vel / c.pitch;
+  let target;
+  if (Math.abs(vel) < 0.3){
+    target = Math.round(c.focus);
+  } else {
+    target = clamp(Math.round(c.focus) + clamp(Math.round(vFocus * 120), -3, 3), 0, c.count - 1);
+  }
+  const dist = Math.abs(target - c.focus);
+  animateFocusTo(target, clamp(260 + dist * 90, 260, 640));
+}
+function curFocus(){ return carousel ? Math.round(carousel.focus) : sel; }
+function setFocus(i){ if (carousel){ carousel.focus = clamp(i, 0, carousel.count - 1); sel = carousel.focus; requestPaint(); } else { sel = clamp(i, 0, books.length - 1); } }
 async function updateInfo(){
   if (!books.length) return;
   const b = books[sel];
@@ -291,39 +550,19 @@ async function updateInfo(){
     if (books[sel] !== b) return;
     $("infoSub").textContent = (b.author || "") + " · " + (d.chars / 10000).toFixed(1) + " 万字 · " + d.paras.length + " 段";
     if (saved >= 0) $("infoBar").style.width = Math.min(100, Math.round((saved + 1) / d.paras.length * 100)) + "%";
-    const cov = document.querySelectorAll(".book")[sel];
-    if (cov) cov.querySelector(".cov-prog").textContent = saved >= 0 ? "READ " + Math.round((saved + 1) / d.paras.length * 100) + "%" : "";
   } catch(e){ /* 正文暂不可读时保持基本信息 */ }
 }
-/* drag to scroll + settle-select */
-(function(){
-  const stage = $("stage");
-  let down = false, startX = 0, startL = 0, moved = false, settleTimer = null;
-  stage.addEventListener("pointerdown", e => { down = true; moved = false; startX = e.clientX; startL = stage.scrollLeft; });
-  stage.addEventListener("pointermove", e => { if (!down) return; const dx = e.clientX - startX; if (Math.abs(dx) > 4) moved = true; stage.scrollLeft = startL - dx; });
-  window.addEventListener("pointerup", () => { down = false; });
-  stage.addEventListener("click", e => { if (moved){ e.stopPropagation(); moved = false; } }, true);
-  stage.addEventListener("scroll", () => {
-    clearTimeout(settleTimer);
-    settleTimer = setTimeout(() => {
-      const mid = stage.scrollLeft + stage.clientWidth / 2;
-      let best = 0, bd = 1e12;
-      document.querySelectorAll(".book").forEach((el, j) => { const c = el.offsetLeft + el.clientWidth / 2; const d = Math.abs(c - mid); if (d < bd){ bd = d; best = j; } });
-      if (best !== sel) select(best, false);
-    }, 140);
-  });
-})();
-$("prevBtn").addEventListener("click", () => select(sel - 1, true));
-$("nextBtn").addEventListener("click", () => select(sel + 1, true));
+$("prevBtn").addEventListener("click", () => { if (carousel) animateFocusTo(curFocus() - 1, 360); });
+$("nextBtn").addEventListener("click", () => { if (carousel) animateFocusTo(curFocus() + 1, 360); });
 $("readBtn").addEventListener("click", () => openReader(books[sel]));
 $("openArrow").addEventListener("click", () => openReader(books[sel]));
 
 /* ---------- reader ---------- */
-let cur = null; // {book, data, curPara, io}
+let cur = null; // {book, data, curPara, io, paged, pages, curPage, pageW, pageH}
 const prefs = JSON.parse(localStorage.getItem("shelf-reader-prefs") || "{}");
 if (prefs.fontSize) document.documentElement.style.setProperty("--rfs", prefs.fontSize + "px");
 if (prefs.night) document.body.classList.add("night");
-function savePrefs(){ localStorage.setItem("shelf-reader-prefs", JSON.stringify({fontSize: parseInt(getComputedStyle(document.documentElement).getPropertyValue("--rfs")) || 18, night: document.body.classList.contains("night")})); }
+function savePrefs(){ localStorage.setItem("shelf-reader-prefs", JSON.stringify({fontSize: parseInt(getComputedStyle(document.documentElement).getPropertyValue("--rfs")) || 18, night: document.body.classList.contains("night"), paged: prefs.paged === true})); }
 
 async function openReader(book){
   if (!book) return;
@@ -338,7 +577,8 @@ async function openReader(book){
   let data;
   try { data = await loadText(book); }
   catch(e){ $("rInner").innerHTML = '<div class="rloading">这本书暂时打不开，请稍后再试。</div>'; return; }
-  cur = { book, data, curPara: 0 };
+  const saved = progressOf(book);
+  cur = { book, data, curPara: saved > 0 ? saved : 0, io: null, paged: prefs.paged === true, pages: [], curPage: 0, pageW: 0, pageH: 0 };
   const chapSet = new Set(data.chapters.map(c => c.index));
   const frag = document.createDocumentFragment();
   data.paras.forEach((p, i) => {
@@ -352,27 +592,9 @@ async function openReader(book){
   inner.innerHTML = "";
   inner.appendChild(frag);
   buildToc();
-  // progress observer
-  if (cur.io) cur.io.disconnect();
-  let saveTimer = null;
-  cur.io = new IntersectionObserver(entries => {
-    entries.forEach(en => {
-      if (en.isIntersecting){
-        cur.curPara = parseInt(en.target.dataset.i, 10);
-        onParaChange();
-        clearTimeout(saveTimer);
-        saveTimer = setTimeout(() => localStorage.setItem("shelf-progress-" + book.id, String(cur.curPara)), 400);
-      }
-    });
-  }, { root: $("rScroll"), rootMargin: "0px 0px -82% 0px", threshold: 0 });
-  inner.querySelectorAll(".para").forEach(el => cur.io.observe(el));
-  const saved = progressOf(book);
-  if (saved > 0){
-    const target = inner.querySelector('.para[data-i="' + saved + '"]');
-    if (target) requestAnimationFrame(() => requestAnimationFrame(() => target.scrollIntoView({block: "start"})));
-    cur.curPara = saved;
-    onParaChange();
-  }
+  $("pageBtn").textContent = cur.paged ? "滚动" : "翻页";
+  if (cur.paged) enterPagedMode();
+  else enterScrollMode();
 }
 function currentChapter(){
   if (!cur) return null;
@@ -380,13 +602,112 @@ function currentChapter(){
   for (const c of cur.data.chapters){ if (c.index <= cur.curPara) ch = c; else break; }
   return ch;
 }
-function onParaChange(){
+function updateFooter(){
   if (!cur) return;
   const total = cur.data.paras.length;
-  $("rPct").textContent = Math.round((cur.curPara + 1) / total * 100) + "% · 第 " + (cur.curPara + 1) + " / " + total + " 段";
+  if (cur.paged){
+    $("rPct").textContent = "第 " + (cur.curPage + 1) + " / " + cur.pages.length + " 页 · " + Math.round((cur.curPage + 1) / cur.pages.length * 100) + "%";
+  } else {
+    $("rPct").textContent = Math.round((cur.curPara + 1) / total * 100) + "% · 第 " + (cur.curPara + 1) + " / " + total + " 段";
+  }
   const ch = currentChapter();
   $("rChapter").textContent = ch ? ch.title : "";
   document.querySelectorAll(".titem").forEach(el => el.classList.toggle("cur", ch && parseInt(el.dataset.i, 10) === ch.index));
+}
+function makeObserver(){
+  let saveTimer = null;
+  return new IntersectionObserver(entries => {
+    entries.forEach(en => {
+      if (en.isIntersecting){
+        cur.curPara = parseInt(en.target.dataset.i, 10);
+        updateFooter();
+        clearTimeout(saveTimer);
+        saveTimer = setTimeout(() => localStorage.setItem("shelf-progress-" + cur.book.id, String(cur.curPara)), 400);
+      }
+    });
+  }, { root: $("rScroll"), rootMargin: "0px 0px -82% 0px", threshold: 0 });
+}
+function buildPages(){
+  const rScroll = $("rScroll");
+  const topPad = 44, botPad = 64;
+  const contentH = Math.max(200, rScroll.clientHeight - topPad - botPad);
+  cur.pageW = rScroll.clientWidth;
+  cur.pageH = rScroll.clientHeight;
+  const paras = [...$("rInner").querySelectorAll(".para")];
+  const pages = [];
+  let start = 0;
+  for (let i = 0; i < paras.length; i++){
+    const startTop = paras[start].offsetTop;
+    const bottom = paras[i].offsetTop + paras[i].offsetHeight;
+    if (bottom - startTop > contentH && i > start){
+      pages.push({ start: start, end: i - 1 });
+      start = i;
+    }
+  }
+  if (start < paras.length) pages.push({ start: start, end: paras.length - 1 });
+  cur.pages = pages;
+}
+function enterScrollMode(){
+  const inner = $("rInner");
+  const pageEls = inner.querySelectorAll(".page");
+  if (pageEls.length){
+    const frag = document.createDocumentFragment();
+    pageEls.forEach(pg => { while (pg.firstChild) frag.appendChild(pg.firstChild); });
+    inner.innerHTML = "";
+    inner.appendChild(frag);
+  }
+  inner.classList.remove("paged");
+  $("rScroll").classList.remove("paged");
+  if (cur.io) cur.io.disconnect();
+  cur.io = makeObserver();
+  inner.querySelectorAll(".para").forEach(el => cur.io.observe(el));
+  const target = inner.querySelector('.para[data-i="' + cur.curPara + '"]');
+  if (target) requestAnimationFrame(() => requestAnimationFrame(() => target.scrollIntoView({block: "start"})));
+  updateFooter();
+}
+function enterPagedMode(){
+  const inner = $("rInner");
+  if (cur.io) cur.io.disconnect();
+  buildPages();
+  const paras = [...inner.querySelectorAll(".para")];
+  inner.innerHTML = "";
+  inner.classList.add("paged");
+  cur.pages.forEach(pg => {
+    const pageEl = document.createElement("div");
+    pageEl.className = "page";
+    pageEl.style.width = cur.pageW + "px";
+    pageEl.style.height = cur.pageH + "px";
+    for (let i = pg.start; i <= pg.end; i++) pageEl.appendChild(paras[i]);
+    inner.appendChild(pageEl);
+  });
+  $("rScroll").classList.add("paged");
+  let p = cur.pages.findIndex(pg => cur.curPara >= pg.start && cur.curPara <= pg.end);
+  if (p < 0) p = 0;
+  cur.curPage = p;
+  goPage(p, false);
+  $("pageBtn").textContent = "滚动";
+}
+function goPage(p, animate){
+  if (!cur || !cur.paged) return;
+  p = clamp(p, 0, cur.pages.length - 1);
+  cur.curPage = p;
+  const inner = $("rInner");
+  if (animate) inner.classList.add("anim");
+  else inner.classList.remove("anim");
+  inner.style.transform = "translateX(" + (-p * cur.pageW) + "px)";
+  cur.curPara = cur.pages[p].start;
+  localStorage.setItem("shelf-progress-" + cur.book.id, String(cur.curPara));
+  updateFooter();
+}
+function rePaged(){
+  const inner = $("rInner");
+  const frag = document.createDocumentFragment();
+  inner.querySelectorAll(".page").forEach(pg => { while (pg.firstChild) frag.appendChild(pg.firstChild); });
+  inner.innerHTML = "";
+  inner.appendChild(frag);
+  inner.classList.remove("paged");
+  $("rScroll").classList.remove("paged");
+  enterPagedMode();
 }
 function buildToc(){
   const list = $("tocList");
@@ -409,8 +730,14 @@ function buildToc(){
     });
   }
   list.querySelectorAll(".titem").forEach(el => el.addEventListener("click", () => {
-    const target = document.querySelector('.para[data-i="' + el.dataset.i + '"]');
-    if (target) target.scrollIntoView({block: "start"});
+    const idx = parseInt(el.dataset.i, 10);
+    if (cur.paged){
+      const p = cur.pages.findIndex(pg => idx >= pg.start && idx <= pg.end);
+      if (p >= 0) goPage(p, true);
+    } else {
+      const target = document.querySelector('.para[data-i="' + idx + '"]');
+      if (target) target.scrollIntoView({block: "start"});
+    }
     $("toc").classList.remove("open");
   }));
 }
@@ -427,15 +754,38 @@ $("tocBtn").addEventListener("click", () => {
   if (curEl) curEl.scrollIntoView({block: "center"});
 });
 $("tocClose").addEventListener("click", () => $("toc").classList.remove("open"));
+$("pageBtn").addEventListener("click", () => {
+  if (!cur) return;
+  cur.paged = !cur.paged;
+  prefs.paged = cur.paged;
+  savePrefs();
+  if (cur.paged) enterPagedMode();
+  else enterScrollMode();
+});
 $("fontUp").addEventListener("click", () => setFont(1));
 $("fontDown").addEventListener("click", () => setFont(-1));
 function setFont(d){
   const now = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--rfs")) || 18;
   const next = Math.max(14, Math.min(26, now + d));
   document.documentElement.style.setProperty("--rfs", next + "px");
+  if (cur && cur.paged) rePaged();
   savePrefs();
 }
 $("nightBtn").addEventListener("click", () => { document.body.classList.toggle("night"); savePrefs(); });
+
+/* 翻页导航：点击两侧 / 键盘 / 左右滑动 */
+$("tapPrev").addEventListener("click", () => { if (cur && cur.paged) goPage(cur.curPage - 1, true); });
+$("tapNext").addEventListener("click", () => { if (cur && cur.paged) goPage(cur.curPage + 1, true); });
+document.addEventListener("keydown", e => {
+  if (!cur || !$("reader").classList.contains("open") || !cur.paged) return;
+  if (e.key === "ArrowLeft" || e.key === "PageUp"){ goPage(cur.curPage - 1, true); e.preventDefault(); }
+  else if (e.key === "ArrowRight" || e.key === "PageDown" || e.key === " "){ goPage(cur.curPage + 1, true); e.preventDefault(); }
+});
+(function(){
+  let sx = 0, sy = 0, down = false;
+  $("rScroll").addEventListener("pointerdown", e => { if (!cur || !cur.paged) return; down = true; sx = e.clientX; sy = e.clientY; });
+  window.addEventListener("pointerup", e => { if (!down) return; down = false; const dx = e.clientX - sx, dy = e.clientY - sy; if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5 && cur && cur.paged) goPage(cur.curPage + (dx < 0 ? 1 : -1), true); });
+})();
 
 /* ---------- boot ---------- */
 $("year").textContent = new Date().getFullYear();
