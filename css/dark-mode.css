@@ -1,12 +1,20 @@
-/* 深色模式变量 */
+/* 深色模式变量 — 纸面档案风的夜间版（与书架夜间色一致） */
 :root[data-theme="dark"] {
-    --background-color: #1a1a1a;
-    --card-bg: #2d2d2d;
-    --text-color: #e0e0e0;
-    --primary-color: #6a8caf;
-    --secondary-color: #7a9eb5;
-    --border-color: #404040;
-    --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    --paper: #191919;
+    --surface: #242424;
+    --milk: #2D2D2D;
+    --ink: #F2F2F2;
+    --ink-soft: #C9C9C4;
+    --muted: #B7B7B7;
+    --line: #3C3C3C;
+    --seed: #8FA998;
+    --seed-soft: rgba(143, 169, 152, 0.16);
+
+    --background-color: var(--paper);
+    --card-bg: var(--surface);
+    --text-color: var(--ink);
+    --border-color: var(--line);
+    --shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
 }
 
 /* 深色模式下的图片降低亮度 */
