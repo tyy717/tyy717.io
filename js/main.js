@@ -82,7 +82,7 @@ async function loadSinglePost(postId) {
                 ${bodyHTML}
             </div>
             <p style="margin-top: 2rem;">
-                <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> 返回首页</a>
+                <a href="diary.html" class="back-link"><i class="fas fa-arrow-left"></i> 返回日记归档</a>
             </p>
         `;
 

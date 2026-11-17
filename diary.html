@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>日记归档 - 我的日常手记</title>
+    <!-- ===== 预加载关键资源 ===== -->
+    <link rel="preload" href="css/style.css" as="style">
+    <link rel="preload" href="css/dark-mode.css" as="style">
+    <link rel="preload" href="js/main.js" as="script">
+    <link rel="preload" href="js/search.js" as="script">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" crossorigin="anonymous">
+    <link rel="preload" href="posts_index.json" as="fetch" type="application/json" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+
+    <!-- ===== CSS链接 ===== -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dark-mode.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- 主题切换按钮 -->
+    <button class="theme-switcher" id="theme-toggle" aria-label="切换主题">
+        <i class="fas fa-moon"></i>
+    </button>
+
+    <!-- 按需引入新脚本 -->
+    <script src="js/lazy-load.js" defer></script>
+    <script src="js/search.js" defer></script>
+    <script src="js/progress.js" defer></script>
+
+    <div class="reading-progress" id="reading-progress"></div>
+
+    <header>
+        <div class="container">
+            <div class="header-top">
+                <h1><a href="index.html" style="color: inherit; text-decoration: none;">
+                    <i class="fas fa-feather-alt"></i> 我的日常手记
+                </a></h1>
+                <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> 回到首页</a>
+            </div>
+
+            <div class="search-container">
+                <div class="search-box-wrapper">
+                    <input type="text"
+                           id="search-input"
+                           class="search-box"
+                           placeholder="搜索日记... (按 Ctrl+K 聚焦)"
+                           aria-label="搜索日记">
+                    <i class="fas fa-search search-icon"></i>
+                </div>
+                <div class="search-results" id="search-results"></div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="posts-container">
+            <div class="sec-head">
+                <div class="sec-kicker"><span>DIARY / 日记归档</span><span class="rule"></span><span class="dot"></span></div>
+                <h2>所有记录</h2>
+            </div>
+            <div id="posts-list">
+                <!-- 日记列表将由JavaScript动态生成在这里 -->
+                <p class="loading"><i class="fas fa-spinner fa-spin"></i> 正在加载日记...</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>© <span id="current-year"></span> 我的日常手记. 由简单代码构建。</p>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
