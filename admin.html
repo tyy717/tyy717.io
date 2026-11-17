@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理台 - 我的日常手记</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dark-mode.css">
+    <style>
+        header { padding: 2.4rem 0 1.6rem; }
+        .admin-shell { max-width: 860px; margin: 0 auto; padding: 0 20px 80px; }
+        .panel {
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            padding: 20px 22px;
+            margin-bottom: 22px;
+        }
+        .panel h2 {
+            font-family: var(--serif);
+            font-size: 1.05rem;
+            letter-spacing: .04em;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .panel h2 .rule { flex: 1; height: 1px; background: var(--line); }
+        .field { margin-bottom: 13px; }
+        .field label {
+            display: block;
+            font-family: var(--mono);
+            font-size: 10px;
+            letter-spacing: .08em;
+            color: var(--muted);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+        .field input[type="text"], .field input[type="password"], .field select, .field textarea {
+            width: 100%;
+            padding: 9px 11px;
+            border: 1px solid var(--line);
+            border-radius: 4px;
+            background: var(--milk);
+            color: var(--ink);
+            font-family: inherit;
+            font-size: .92rem;
+            line-height: 1.6;
+        }
+        .field textarea { min-height: 190px; resize: vertical; font-family: var(--serif); font-size: .95rem; }
+        .field input:focus, .field select:focus, .field textarea:focus {
+            outline: none;
+            border-color: var(--seed);
+            box-shadow: 0 0 0 3px var(--seed-soft);
+        }
+        .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        @media (max-width: 620px) { .row-2 { grid-template-columns: 1fr; } }
+        .actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+        button {
+            font-family: var(--mono);
+            font-size: 11px;
+            letter-spacing: .08em;
+            padding: 9px 16px;
+            border-radius: 3px;
+            border: 1px solid var(--ink);
+            background: var(--ink);
+            color: var(--paper);
+            cursor: pointer;
+            transition: .18s;
+        }
+        button:hover { background: var(--seed); border-color: var(--seed); }
+        button.ghost { background: transparent; color: var(--ink-soft); border-color: var(--line); }
+        button.ghost:hover { border-color: var(--seed); color: var(--seed); background: transparent; }
+        button:disabled { opacity: .5; cursor: not-allowed; }
+        .tabs { display: flex; gap: 6px; margin-bottom: 18px; flex-wrap: wrap; }
+        .tab {
+            font-family: var(--mono);
+            font-size: 11px;
+            letter-spacing: .06em;
+            padding: 8px 15px;
+            border: 1px solid var(--line);
+            border-radius: 3px;
+            background: transparent;
+            color: var(--muted);
+            cursor: pointer;
+        }
+        .tab.active { background: var(--seed); border-color: var(--seed); color: #fff; }
+        .status { font-family: var(--mono); font-size: 11px; color: var(--muted); min-height: 16px; }
+        .status.ok { color: var(--seed); }
+        .status.err { color: #B4483F; }
+        .item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px dashed var(--line);
+        }
+        .item:last-child { border-bottom: none; }
+        .item-main { min-width: 0; }
+        .item-title { font-size: .95rem; color: var(--ink); }
+        .item-sub { font-family: var(--mono); font-size: 10px; color: var(--muted); margin-top: 3px; }
+        .item-actions { display: flex; gap: 6px; flex-shrink: 0; }
+        .item-actions button { padding: 6px 11px; font-size: 10px; }
+        .hint { font-size: .82rem; color: var(--muted); line-height: 1.7; }
+        .hint a { color: var(--seed); }
+        .hidden { display: none !important; }
+        .snippet {
+            font-family: var(--mono);
+            font-size: 11px;
+            background: var(--milk);
+            border: 1px solid var(--line);
+            padding: 9px 11px;
+            border-radius: 4px;
+            word-break: break-all;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+        .thumb { max-width: 180px; border-radius: 4px; border: 1px solid var(--line); display: block; margin-top: 10px; }
+    </style>
+</head>
+<body>
+<header>
+    <div class="container">
+        <div class="masthead-code">CONTENT CONSOLE / 内容管理</div>
+        <h1>管理台</h1>
+        <p class="subtitle">发布日记、上传书籍与图片</p>
+    </div>
+</header>
+
+<div class="admin-shell">
+    <section class="panel" id="login-panel">
+        <h2>登录<span class="rule"></span><span id="login-state" class="status"></span></h2>
+        <p class="hint" style="margin-bottom:14px;">
+            使用 GitHub Token 验证身份，内容会直接提交到
+            <a href="https://github.com/tyy717/tyy717.io" target="_blank" rel="noopener">tyy717/tyy717.io</a> 仓库，
+            GitHub Pages 约一分钟后自动更新。Token 只保存在当前浏览器。
+        </p>
+        <div class="field">
+            <label for="token">GitHub Token</label>
+            <input type="password" id="token" placeholder="github_pat_..." autocomplete="off">
+        </div>
+        <div class="actions">
+            <button id="login-btn">验证并保存</button>
+            <button id="logout-btn" class="ghost hidden">清除 Token</button>
+        </div>
+    </section>
+
+    <div id="console" class="hidden">
+        <div class="tabs">
+            <button class="tab active" data-tab="posts">日记</button>
+            <button class="tab" data-tab="books">书籍</button>
+            <button class="tab" data-tab="images">图片</button>
+        </div>
+
+        <section class="panel tab-panel" id="tab-posts">
+            <h2>写日记<span class="rule"></span></h2>
+            <div class="row-2">
+                <div class="field">
+                    <label for="post-title">标题</label>
+                    <input type="text" id="post-title" placeholder="今天的标题">
+                </div>
+                <div class="field">
+                    <label for="post-date">日期</label>
+                    <input type="text" id="post-date" placeholder="2026年11月17日">
+                </div>
+            </div>
+            <div class="row-2">
+                <div class="field">
+                    <label for="post-mood">心情</label>
+                    <select id="post-mood">
+                        <option>平静</option>
+                        <option>开心</option>
+                        <option>思考</option>
+                        <option>兴奋</option>
+                        <option>怀念</option>
+                        <option>期待</option>
+                        <option>放松</option>
+                        <option>其他</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="post-readtime">阅读时长</label>
+                    <input type="text" id="post-readtime" value="3分钟阅读">
+                </div>
+            </div>
+            <div class="field">
+                <label for="post-tags">标签（逗号分隔，最多 5 个）</label>
+                <input type="text" id="post-tags" placeholder="随笔, 日常">
+            </div>
+            <div class="field">
+                <label for="post-summary">摘要</label>
+                <input type="text" id="post-summary" placeholder="一句话说明这篇记录">
+            </div>
+            <div class="field">
+                <label for="post-body">正文（支持换行，可直接写 HTML）</label>
+                <textarea id="post-body" placeholder="今天……"></textarea>
+            </div>
+            <div class="actions">
+                <button id="post-submit">发布日记</button>
+                <button id="post-cancel" class="ghost hidden">取消编辑</button>
+                <span id="post-status" class="status"></span>
+            </div>
+            <h2 style="margin-top:26px;">已有日记<span class="rule"></span><span id="post-count" class="status"></span></h2>
+            <div id="post-list"></div>
+        </section>
+
+        <section class="panel tab-panel hidden" id="tab-books">
+            <h2>上传书籍<span class="rule"></span></h2>
+            <div class="row-2">
+                <div class="field">
+                    <label for="book-title">书名</label>
+                    <input type="text" id="book-title" placeholder="作品名">
+                </div>
+                <div class="field">
+                    <label for="book-author">作者</label>
+                    <input type="text" id="book-author" placeholder="署名">
+                </div>
+            </div>
+            <div class="row-2">
+                <div class="field">
+                    <label for="book-date">日期</label>
+                    <input type="text" id="book-date" placeholder="2026年11月17日">
+                </div>
+                <div class="field">
+                    <label for="book-file">txt 文件（不超过 12MB）</label>
+                    <input type="file" id="book-file" accept=".txt,text/plain">
+                </div>
+            </div>
+            <div class="field">
+                <label for="book-summary">简介</label>
+                <input type="text" id="book-summary" placeholder="一句话简介">
+            </div>
+            <div class="actions">
+                <button id="book-submit">上传书籍</button>
+                <span id="book-status" class="status"></span>
+            </div>
+            <h2 style="margin-top:26px;">书架<span class="rule"></span><span id="book-count" class="status"></span></h2>
+            <div id="book-list"></div>
+        </section>
+
+        <section class="panel tab-panel hidden" id="tab-images">
+            <h2>上传图片<span class="rule"></span></h2>
+            <p class="hint" style="margin-bottom:12px;">支持 jpg / png / gif / webp，单张不超过 6MB。上传后把代码粘到日记正文里即可。</p>
+            <div class="field">
+                <label for="image-file">选择图片</label>
+                <input type="file" id="image-file" accept="image/*">
+            </div>
+            <div class="actions">
+                <button id="image-submit">上传图片</button>
+                <span id="image-status" class="status"></span>
+            </div>
+            <div id="image-result" class="hidden">
+                <div class="snippet" id="image-snippet"></div>
+                <img id="image-preview" class="thumb" alt="预览">
+            </div>
+        </section>
+    </div>
+</div>
+</body>
+<script src="js/admin.js"></script>
+</html>
