@@ -22,5 +22,13 @@
     "date": "2026年11月17日",
     "summary": "ly喜欢的一本书",
     "file": "books/book-mwkh0oit.txt"
+  },
+  {
+    "id": "book-mwkjaom7",
+    "title": "麦穗与羊",
+    "author": "羊馍干",
+    "date": "2026年11月17日",
+    "summary": "贴吧的小故事",
+    "file": "books/book-mwkjaom7.txt"
   }
 ]
