@@ -4,136 +4,147 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>我的日常手记</title>
-    <!-- ===== 预加载关键资源 ===== -->
+    <meta name="description" content="书架与日记：一些自己写的作品，和一些日常的碎片。">
+
     <link rel="preload" href="css/style.css" as="style">
     <link rel="preload" href="css/dark-mode.css" as="style">
-    <link rel="preload" href="js/main.js" as="script">
-    <link rel="preload" href="js/search.js" as="script">
-    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" crossorigin="anonymous">
-    <link rel="preload" href="posts_index.json" as="fetch" type="application/json" crossorigin>
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-    <link rel="preconnect" href="https://images.unsplash.com">
-
-    <!-- ===== CSS链接 ===== -->
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/dark-mode.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
 </head>
 <body>
-    <!-- 主题切换按钮 -->
-    <button class="theme-switcher" id="theme-toggle" aria-label="切换主题">
-        <i class="fas fa-moon"></i>
-    </button>
-
-    <!-- 按需引入新脚本 -->
-    <script src="js/lazy-load.js" defer></script>
-    <script src="js/search.js" defer></script>
-    <script src="js/progress.js" defer></script>
-
-    <div class="reading-progress" id="reading-progress"></div>
-
-    <header>
-        <div class="container">
-            <div class="masthead-code">DAILY NOTES — PERSONAL ARCHIVE</div>
-            <h1><i class="fas fa-feather-alt"></i> 我的日常手记</h1>
-            <p class="subtitle">记录生活的每一刻闪光</p>
-
-            <div class="search-container">
-                <div class="search-box-wrapper">
-                    <input type="text"
-                           id="search-input"
-                           class="search-box"
-                           placeholder="搜索日记... (按 Ctrl+K 聚焦)"
-                           aria-label="搜索日记">
-                    <i class="fas fa-search search-icon"></i>
-                </div>
-                <div class="search-results" id="search-results"></div>
-            </div>
+    <header class="topbar" id="topbar">
+        <div class="topbar-inner">
+            <a class="brand" href="index.html"><span class="brand-mark"></span>日常手记</a>
+            <nav class="nav">
+                <a href="shelf.html">书架</a>
+                <a href="diary.html">日记</a>
+                <a href="#about">关于</a>
+            </nav>
+            <button class="theme-toggle" id="theme-toggle" aria-label="切换主题">
+                <i class="fas fa-moon"></i>
+            </button>
         </div>
     </header>
 
-    <main class="container">
-        <!-- 入口索引 -->
-        <section class="portal-section">
-            <div class="sec-head">
-                <div class="sec-kicker"><span>INDEX / 入口</span><span class="rule"></span><span class="dot"></span></div>
-                <h2>去处</h2>
+    <div class="reading-progress" id="reading-progress"></div>
+
+    <section class="hero">
+        <div class="hero-spine" aria-hidden="true">
+            <span>Selected works &amp; private notes · 2024 — 2026</span>
+        </div>
+
+        <div class="hero-inner">
+            <p class="hero-kicker">DAILY NOTES — PERSONAL ARCHIVE</p>
+            <h1>我的<br>日常手记</h1>
+            <p class="hero-lede">记录生活的每一刻闪光。书架放我写的作品，日记放日常的碎片。</p>
+            <div class="hero-actions">
+                <a class="btn-solid" href="shelf.html">去书架 <i class="fas fa-arrow-right"></i></a>
+                <a class="btn-line" href="diary.html">读日记</a>
             </div>
-            <div class="entry-list">
-                <a class="entry-row" href="shelf.html">
-                    <span class="entry-no">01</span>
-                    <span class="entry-main">
-                        <span class="entry-title">我的书架</span>
-                        <span class="entry-desc">我自己写的作品，一本一本立在这里，点开就能读。</span>
-                        <span class="entry-meta"><span id="stat-books">— 本藏书</span> · WK ARCHIVE</span>
-                    </span>
-                    <span class="entry-arrow">↗</span>
-                </a>
-                <a class="entry-row" href="diary.html">
-                    <span class="entry-no">02</span>
-                    <span class="entry-main">
-                        <span class="entry-title">日记归档</span>
-                        <span class="entry-desc">日常手记都在这儿，按时间倒序排好。</span>
-                        <span class="entry-meta"><span id="stat-posts">— 篇记录</span> · DIARY</span>
-                    </span>
-                    <span class="entry-arrow">↗</span>
-                </a>
-                <a class="entry-row" href="#about">
-                    <span class="entry-no">03</span>
-                    <span class="entry-main">
-                        <span class="entry-title">关于本站</span>
-                        <span class="entry-desc">这个小站是什么，我是谁。</span>
-                        <span class="entry-meta">ABOUT</span>
-                    </span>
-                    <span class="entry-arrow">↓</span>
-                </a>
+        </div>
+
+        <div class="hero-foot">
+            <span>EST. 2024 · 私人档案</span>
+            <span><span id="stat-posts">— 篇记录</span> · <span id="stat-books">— 本藏书</span></span>
+        </div>
+    </section>
+
+    <main>
+        <section class="section" id="routes">
+            <div class="shell">
+                <div class="sec-head reveal">
+                    <div>
+                        <div class="sec-kicker"><span>INDEX / 入口</span><span class="rule"></span><span class="dot"></span></div>
+                        <h2>去处</h2>
+                    </div>
+                    <span class="sec-note">三间屋子，随便逛</span>
+                </div>
+
+                <div class="entry-list">
+                    <a class="entry-row reveal" href="shelf.html">
+                        <span class="entry-no">01</span>
+                        <span>
+                            <span class="entry-title">我的书架</span>
+                            <span class="entry-desc">我自己写的作品，一本一本立在这里，点开就能读。</span>
+                            <span class="entry-meta">WK ARCHIVE · 阅读进度记在本机</span>
+                        </span>
+                        <span class="entry-arrow">↗</span>
+                    </a>
+                    <a class="entry-row reveal" href="diary.html">
+                        <span class="entry-no">02</span>
+                        <span>
+                            <span class="entry-title">日记归档</span>
+                            <span class="entry-desc">日常手记都在这儿，按时间倒序排好。</span>
+                            <span class="entry-meta">DIARY · 按时间归档</span>
+                        </span>
+                        <span class="entry-arrow">↗</span>
+                    </a>
+                    <a class="entry-row reveal" href="#about">
+                        <span class="entry-no">03</span>
+                        <span>
+                            <span class="entry-title">关于本站</span>
+                            <span class="entry-desc">这个小站是什么，我是谁。</span>
+                            <span class="entry-meta">ABOUT</span>
+                        </span>
+                        <span class="entry-arrow">↓</span>
+                    </a>
+                </div>
             </div>
         </section>
 
-        <!-- 最新动态 -->
-        <section class="portal-section">
-            <div class="sec-head">
-                <div class="sec-kicker"><span>LATEST / 最新</span><span class="rule"></span><span class="dot"></span></div>
-                <h2>最近写下</h2>
+        <section class="section" id="latest">
+            <div class="shell">
+                <div class="sec-head reveal">
+                    <div>
+                        <div class="sec-kicker"><span>LATEST / 最新</span><span class="rule"></span><span class="dot"></span></div>
+                        <h2>最近写下</h2>
+                    </div>
+                    <a class="link-more" href="diary.html">全部记录 <i class="fas fa-arrow-right"></i></a>
+                </div>
+
+                <div class="posts-list" id="latest-list">
+                    <p class="loading"><i class="fas fa-spinner fa-spin"></i> 正在加载...</p>
+                </div>
             </div>
-            <div id="latest-list">
-                <p class="loading"><i class="fas fa-spinner fa-spin"></i> 正在加载...</p>
-            </div>
-            <p class="more-row"><a class="more-link" href="diary.html">全部日记 <i class="fas fa-arrow-right"></i></a></p>
         </section>
 
-        <!-- 关于 -->
-        <section class="portal-section" id="about">
-            <div class="sec-head">
-                <div class="sec-kicker"><span>ABOUT / 关于</span><span class="rule"></span><span class="dot"></span></div>
-                <h2>关于本站</h2>
-            </div>
-            <div class="about-block">
-                <p>欢迎来到我的小角落。这里没有宏大的叙事，只有平凡日子里真实的温度。</p>
-                <p>这个站有两间屋子：一间是<strong>书架</strong>，放我自己写的作品；一间是<strong>日记</strong>，记日常的碎片。慢慢逛，不着急。</p>
-                <a href="https://github.com/tyy717" class="social-link" target="_blank"><i class="fab fa-github"></i> GitHub</a>
-                <a href="shelf.html" class="social-link"><i class="fas fa-book"></i> 我的书架</a>
+        <section class="section" id="about">
+            <div class="shell">
+                <div class="sec-head reveal">
+                    <div>
+                        <div class="sec-kicker"><span>ABOUT / 关于</span><span class="rule"></span><span class="dot"></span></div>
+                        <h2>关于本站</h2>
+                    </div>
+                </div>
+
+                <div class="about-grid">
+                    <p class="about-statement reveal">这里没有宏大的叙事，<br>只有平凡日子里<em>真实的温度</em>。</p>
+                    <div class="about-copy reveal">
+                        <p>欢迎来到我的小角落。这个站有两间屋子：一间是书架，放我自己写的作品；一间是日记，记日常的碎片。</p>
+                        <p>慢慢逛，不着急。</p>
+                        <div class="about-links">
+                            <a href="https://github.com/tyy717" class="social-link" target="_blank" rel="noopener"><i class="fab fa-github"></i> GitHub</a>
+                            <a href="shelf.html" class="social-link"><i class="fas fa-book"></i> 我的书架</a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
     </main>
 
     <footer>
-        <div class="container">
-            <p>© <span id="current-year"></span> 我的日常手记. 由简单代码构建。</p>
+        <div class="foot-inner">
+            <span>© <span id="current-year"></span> 我的日常手记</span>
+            <span>简单代码 · 长期记录</span>
         </div>
     </footer>
 
     <script src="js/main.js"></script>
+    <script src="js/ui.js" defer></script>
     <script>
-        // 门户首页：填充藏书/日记数量与「最近写下」
         (async function () {
-            try {
-                const resp = await fetch('books_index.json');
-                if (resp.ok) {
-                    const books = await resp.json();
-                    document.getElementById('stat-books').textContent = books.length + ' 本藏书';
-                }
-            } catch (e) { /* 拿不到就保留占位 */ }
             const latestEl = document.getElementById('latest-list');
             try {
                 const resp = await fetch('posts_index.json');
@@ -142,15 +153,23 @@
                 document.getElementById('stat-posts').textContent = posts.length + ' 篇记录';
                 posts.sort((a, b) => new Date(b.id) - new Date(a.id));
                 latestEl.innerHTML = posts.slice(0, 2).map(p => `
-                    <div class="post-card" onclick="window.location.href='post.html?id=${p.id}'">
+                    <article class="post-card reveal" onclick="window.location.href='post.html?id=${encodeURIComponent(p.id)}'">
+                        <span class="post-date">${p.date}<br>${formatReadTime(p.readTime)}</span>
                         <h3 class="post-title">${p.title}</h3>
-                        <span class="post-date"><i class="far fa-calendar"></i> ${p.date} • <i class="far fa-clock"></i> ${p.readTime}</span>
                         <p class="post-summary">${p.summary}</p>
-                        <a class="read-more">阅读全文 <i class="fas fa-arrow-right"></i></a>
-                    </div>`).join('');
+                        <span class="read-more"><i class="fas fa-arrow-right"></i></span>
+                    </article>`).join('');
+                latestEl.querySelectorAll('.post-card').forEach(el => el.classList.add('is-visible'));
             } catch (e) {
                 latestEl.innerHTML = '<p class="error">最新记录暂时加载不出来，去<a href="diary.html">日记归档</a>看看。</p>';
             }
+            try {
+                const resp = await fetch('books_index.json');
+                if (resp.ok) {
+                    const books = await resp.json();
+                    document.getElementById('stat-books').textContent = books.length + ' 本藏书';
+                }
+            } catch (e) { /* 保留占位 */ }
         })();
     </script>
 </body>

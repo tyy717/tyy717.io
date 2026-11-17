@@ -1,23 +1,30 @@
-/* 深色模式变量 — 纸面档案风的夜间版（与书架夜间色一致） */
+/* 深色模式 —— 纸面档案的夜间版 */
 :root[data-theme="dark"] {
-    --paper: #191919;
-    --surface: #242424;
-    --milk: #2D2D2D;
-    --ink: #F2F2F2;
-    --ink-soft: #C9C9C4;
-    --muted: #B7B7B7;
-    --line: #3C3C3C;
-    --seed: #8FA998;
-    --seed-soft: rgba(143, 169, 152, 0.16);
+    --paper: #141412;
+    --surface: #1C1C1A;
+    --milk: #23231F;
+    --ink: #EFEDE6;
+    --ink-soft: #B9B6AB;
+    --muted: #8E8B80;
+    --line: rgba(239, 237, 230, 0.16);
+    --line-soft: rgba(239, 237, 230, 0.08);
+    --accent: #9AB4A2;
+    --accent-soft: rgba(154, 180, 162, 0.12);
+    --accent-ink: #16201A;
+    --shadow: 0 18px 48px rgba(0, 0, 0, 0.45);
 
+    --primary-color: var(--accent);
+    --secondary-color: var(--accent);
     --background-color: var(--paper);
-    --card-bg: var(--surface);
     --text-color: var(--ink);
+    --card-bg: var(--surface);
     --border-color: var(--line);
-    --shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
 }
 
-/* 深色模式下的图片降低亮度 */
-[data-theme="dark"] img {
-    filter: brightness(0.9);
-}
+:root[data-theme="dark"] .btn-solid:hover { background: #AAC3B0; border-color: #AAC3B0; }
+
+:root[data-theme="dark"] .hero { background: #0B0B09; }
+
+:root[data-theme="dark"] img { filter: brightness(0.94); }
+
+:root[data-theme="dark"] ::selection { background: rgba(154, 180, 162, 0.24); }

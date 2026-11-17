@@ -7,131 +7,172 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/dark-mode.css">
     <style>
-        header { padding: 2.4rem 0 1.6rem; }
-        .admin-shell { max-width: 860px; margin: 0 auto; padding: 0 20px 80px; }
+        .admin-head {
+            padding: calc(var(--bar-h) + 52px) 0 28px;
+            border-bottom: 1px solid var(--line);
+            margin-bottom: 40px;
+        }
+        .admin-head .sec-kicker { margin-bottom: 12px; }
+        .admin-head h1 {
+            font-family: var(--serif);
+            font-size: clamp(2rem, 4vw, 2.7rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            line-height: 1.15;
+        }
+        .admin-head .subtitle { color: var(--muted); font-size: 0.92rem; margin-top: 8px; }
+
+        .admin-shell { max-width: 860px; margin: 0 auto; padding: 0 32px 100px; }
+
         .panel {
             background: var(--surface);
             border: 1px solid var(--line);
-            border-radius: 6px;
-            padding: 20px 22px;
-            margin-bottom: 22px;
+            border-radius: 2px;
+            padding: 24px 26px;
+            margin-bottom: 20px;
         }
         .panel h2 {
             font-family: var(--serif);
-            font-size: 1.05rem;
-            letter-spacing: .04em;
-            margin-bottom: 14px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 0.01em;
+            margin-bottom: 16px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
         .panel h2 .rule { flex: 1; height: 1px; background: var(--line); }
-        .field { margin-bottom: 13px; }
+
+        .field { margin-bottom: 14px; }
         .field label {
             display: block;
             font-family: var(--mono);
-            font-size: 10px;
-            letter-spacing: .08em;
-            color: var(--muted);
-            margin-bottom: 5px;
+            font-size: 9px;
+            letter-spacing: 0.16em;
             text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 6px;
         }
-        .field input[type="text"], .field input[type="password"], .field select, .field textarea {
+        .field input[type="text"], .field input[type="password"], .field select, .field textarea, .field input[type="file"] {
             width: 100%;
-            padding: 9px 11px;
+            padding: 10px 12px;
             border: 1px solid var(--line);
-            border-radius: 4px;
+            border-radius: 2px;
             background: var(--milk);
             color: var(--ink);
-            font-family: inherit;
-            font-size: .92rem;
+            font-family: var(--sans);
+            font-size: 0.92rem;
             line-height: 1.6;
         }
-        .field textarea { min-height: 190px; resize: vertical; font-family: var(--serif); font-size: .95rem; }
+        .field textarea { min-height: 200px; resize: vertical; font-family: var(--serif); font-size: 0.98rem; line-height: 1.9; }
         .field input:focus, .field select:focus, .field textarea:focus {
             outline: none;
-            border-color: var(--seed);
-            box-shadow: 0 0 0 3px var(--seed-soft);
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-soft);
         }
-        .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
         @media (max-width: 620px) { .row-2 { grid-template-columns: 1fr; } }
+
         .actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
         button {
             font-family: var(--mono);
-            font-size: 11px;
-            letter-spacing: .08em;
-            padding: 9px 16px;
-            border-radius: 3px;
-            border: 1px solid var(--ink);
-            background: var(--ink);
-            color: var(--paper);
+            font-size: 10px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            padding: 11px 20px;
+            border-radius: 2px;
+            border: 1px solid var(--accent);
+            background: var(--accent);
+            color: var(--accent-ink);
             cursor: pointer;
-            transition: .18s;
+            transition: background 0.25s var(--ease), border-color 0.25s var(--ease), color 0.25s var(--ease);
         }
-        button:hover { background: var(--seed); border-color: var(--seed); }
+        button:hover { background: var(--ink); border-color: var(--ink); color: var(--paper); }
         button.ghost { background: transparent; color: var(--ink-soft); border-color: var(--line); }
-        button.ghost:hover { border-color: var(--seed); color: var(--seed); background: transparent; }
-        button:disabled { opacity: .5; cursor: not-allowed; }
-        .tabs { display: flex; gap: 6px; margin-bottom: 18px; flex-wrap: wrap; }
+        button.ghost:hover { border-color: var(--accent); color: var(--accent); background: transparent; }
+        button:disabled { opacity: 0.45; cursor: not-allowed; }
+
+        .tabs { display: flex; gap: 8px; margin-bottom: 22px; flex-wrap: wrap; }
         .tab {
             font-family: var(--mono);
-            font-size: 11px;
-            letter-spacing: .06em;
-            padding: 8px 15px;
+            font-size: 10px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            padding: 9px 18px;
             border: 1px solid var(--line);
-            border-radius: 3px;
+            border-radius: 2px;
             background: transparent;
             color: var(--muted);
             cursor: pointer;
         }
-        .tab.active { background: var(--seed); border-color: var(--seed); color: #fff; }
-        .status { font-family: var(--mono); font-size: 11px; color: var(--muted); min-height: 16px; }
-        .status.ok { color: var(--seed); }
+        .tab.active { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+
+        .status { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; color: var(--muted); min-height: 16px; }
+        .status.ok { color: var(--accent); }
         .status.err { color: #B4483F; }
+
         .item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 12px;
-            padding: 10px 0;
-            border-bottom: 1px dashed var(--line);
+            gap: 14px;
+            padding: 14px 2px;
+            border-bottom: 1px solid var(--line-soft);
         }
         .item:last-child { border-bottom: none; }
         .item-main { min-width: 0; }
-        .item-title { font-size: .95rem; color: var(--ink); }
-        .item-sub { font-family: var(--mono); font-size: 10px; color: var(--muted); margin-top: 3px; }
+        .item-title { font-size: 0.95rem; color: var(--ink); }
+        .item-sub { font-family: var(--mono); font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-top: 5px; }
         .item-actions { display: flex; gap: 6px; flex-shrink: 0; }
-        .item-actions button { padding: 6px 11px; font-size: 10px; }
-        .hint { font-size: .82rem; color: var(--muted); line-height: 1.7; }
-        .hint a { color: var(--seed); }
+        .item-actions button { padding: 7px 12px; font-size: 9px; }
+
+        .hint { font-size: 0.84rem; color: var(--muted); line-height: 1.85; }
+        .hint a { color: var(--accent); }
         .hidden { display: none !important; }
+
         .snippet {
             font-family: var(--mono);
             font-size: 11px;
+            line-height: 1.7;
             background: var(--milk);
             border: 1px solid var(--line);
-            padding: 9px 11px;
-            border-radius: 4px;
+            padding: 10px 12px;
+            border-radius: 2px;
             word-break: break-all;
-            margin-top: 10px;
+            margin-top: 12px;
             cursor: pointer;
         }
-        .thumb { max-width: 180px; border-radius: 4px; border: 1px solid var(--line); display: block; margin-top: 10px; }
+        .thumb { max-width: 200px; border-radius: 2px; border: 1px solid var(--line); display: block; margin-top: 12px; }
+
+        @media (max-width: 680px) {
+            .admin-shell { padding-left: 20px; padding-right: 20px; }
+            .panel { padding: 18px; }
+        }
     </style>
 </head>
 <body>
-<header>
-    <div class="container">
-        <div class="masthead-code">CONTENT CONSOLE / 内容管理</div>
-        <h1>管理台</h1>
-        <p class="subtitle">发布日记、上传书籍与图片</p>
+<header class="topbar">
+    <div class="topbar-inner">
+        <a class="brand" href="index.html"><span class="brand-mark"></span>日常手记</a>
+        <nav class="nav">
+            <a href="shelf.html">书架</a>
+            <a href="diary.html">日记</a>
+            <a href="index.html#about">关于</a>
+        </nav>
+        <button class="theme-toggle" id="theme-toggle" aria-label="切换主题"><i class="fas fa-moon"></i></button>
     </div>
 </header>
 
 <div class="admin-shell">
+    <div class="admin-head">
+        <div class="sec-kicker"><span>CONTENT CONSOLE</span><span class="rule"></span><span class="dot"></span></div>
+        <h1>管理台</h1>
+        <p class="subtitle">发布日记、上传书籍与图片</p>
+    </div>
+
     <section class="panel" id="login-panel">
         <h2>登录<span class="rule"></span><span id="login-state" class="status"></span></h2>
-        <p class="hint" style="margin-bottom:14px;">
+        <p class="hint" style="margin-bottom:16px;">
             使用 GitHub Token 验证身份，内容会直接提交到
             <a href="https://github.com/tyy717/tyy717.io" target="_blank" rel="noopener">tyy717/tyy717.io</a> 仓库，
             GitHub Pages 约一分钟后自动更新。Token 只保存在当前浏览器。
@@ -201,7 +242,7 @@
                 <button id="post-cancel" class="ghost hidden">取消编辑</button>
                 <span id="post-status" class="status"></span>
             </div>
-            <h2 style="margin-top:26px;">已有日记<span class="rule"></span><span id="post-count" class="status"></span></h2>
+            <h2 style="margin-top:30px;">已有日记<span class="rule"></span><span id="post-count" class="status"></span></h2>
             <div id="post-list"></div>
         </section>
 
@@ -235,13 +276,13 @@
                 <button id="book-submit">上传书籍</button>
                 <span id="book-status" class="status"></span>
             </div>
-            <h2 style="margin-top:26px;">书架<span class="rule"></span><span id="book-count" class="status"></span></h2>
+            <h2 style="margin-top:30px;">书架<span class="rule"></span><span id="book-count" class="status"></span></h2>
             <div id="book-list"></div>
         </section>
 
         <section class="panel tab-panel hidden" id="tab-images">
             <h2>上传图片<span class="rule"></span></h2>
-            <p class="hint" style="margin-bottom:12px;">支持 jpg / png / gif / webp，单张不超过 6MB。上传后把代码粘到日记正文里即可。</p>
+            <p class="hint" style="margin-bottom:14px;">支持 jpg / png / gif / webp，单张不超过 6MB。上传后把代码粘到日记正文里即可。</p>
             <div class="field">
                 <label for="image-file">选择图片</label>
                 <input type="file" id="image-file" accept="image/*">
@@ -258,5 +299,6 @@
     </div>
 </div>
 </body>
+<script src="js/main.js"></script>
 <script src="js/admin.js"></script>
 </html>
