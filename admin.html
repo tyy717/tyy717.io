@@ -234,8 +234,13 @@
                 <input type="text" id="post-summary" placeholder="一句话说明这篇记录">
             </div>
             <div class="field">
-                <label for="post-body">正文（支持换行，可直接写 HTML）</label>
+                <label for="post-body">正文（支持换行，可直接写 HTML，可插入图片）</label>
                 <textarea id="post-body" placeholder="今天……"></textarea>
+                <div class="post-tools" style="margin-top:8px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+                    <button type="button" id="post-insert-image" class="ghost">插入图片</button>
+                    <span class="hint">也可以直接 Ctrl+V / 长按粘贴图片到正文</span>
+                    <input type="file" id="post-image-file" accept="image/*" class="hidden">
+                </div>
             </div>
             <div class="actions">
                 <button id="post-submit">发布日记</button>

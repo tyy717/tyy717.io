@@ -657,6 +657,8 @@ function enterScrollMode(){
     inner.appendChild(frag);
   }
   inner.classList.remove("paged");
+  inner.classList.remove("anim");
+  inner.style.transform = "";
   $("rScroll").classList.remove("paged");
   if (cur.io) cur.io.disconnect();
   cur.io = makeObserver();

@@ -504,29 +504,29 @@ async function removeBook(id, title) {
 
 /* ---------------- 图片 ---------------- */
 
+async function uploadImageFile(file) {
+  if (!file) throw new Error('请选择图片');
+  if (file.size > 6 * 1024 * 1024) throw new Error('图片超过 6MB 限制');
+  const ext = (file.name.split('.').pop() || '').toLowerCase();
+  if (!['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(ext)) throw new Error('仅支持 jpg / png / gif / webp');
+  const name = `${todayId().replace(/-/g, '')}-${Math.random().toString(16).slice(2, 10)}.${ext}`;
+  await commitFiles([{ path: `images/${name}`, base64: await readFileAsBase64(file) }], `上传图片: ${name}`);
+  const src = `images/${name}`;
+  const snippet = `<img src="${src}" alt="" style="max-width:100%;border-radius:8px;margin:1rem 0;">`;
+  return { src, snippet };
+}
+
 async function submitImage() {
   const file = $('image-file').files[0];
   if (!file) {
     setStatus('image-status', '请选择图片', 'err');
     return;
   }
-  if (file.size > 6 * 1024 * 1024) {
-    setStatus('image-status', '图片超过 6MB 限制', 'err');
-    return;
-  }
-  const ext = (file.name.split('.').pop() || '').toLowerCase();
-  if (!['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(ext)) {
-    setStatus('image-status', '仅支持 jpg / png / gif / webp', 'err');
-    return;
-  }
   const btn = $('image-submit');
   btn.disabled = true;
   try {
     setStatus('image-status', '上传中…');
-    const name = `${todayId().replace(/-/g, '')}-${Math.random().toString(16).slice(2, 10)}.${ext}`;
-    await commitFiles([{ path: `images/${name}`, base64: await readFileAsBase64(file) }], `上传图片: ${name}`);
-    const src = `images/${name}`;
-    const snippet = `<img src="${src}" alt="" style="max-width:100%;border-radius:8px;margin:1rem 0;">`;
+    const { src, snippet } = await uploadImageFile(file);
     $('image-snippet').textContent = snippet;
     $('image-preview').src = src;
     $('image-result').classList.remove('hidden');
@@ -543,6 +543,28 @@ async function submitImage() {
   }
 }
 
+function insertAtCursor(textarea, text) {
+  const start = textarea.selectionStart ?? textarea.value.length;
+  const end = textarea.selectionEnd ?? textarea.value.length;
+  textarea.value = textarea.value.slice(0, start) + text + textarea.value.slice(end);
+  const pos = start + text.length;
+  textarea.focus();
+  textarea.setSelectionRange(pos, pos);
+  textarea.dispatchEvent(new Event('input', { bubbles: true }));
+}
+
+async function insertImageIntoPost(file) {
+  if (!file) return;
+  try {
+    setStatus('post-status', '上传图片中…');
+    const { snippet } = await uploadImageFile(file);
+    insertAtCursor($('post-body'), '\n' + snippet + '\n');
+    setStatus('post-status', '图片已插入正文', 'ok');
+  } catch (err) {
+    setStatus('post-status', err.message, 'err');
+  }
+}
+
 /* ---------------- 初始化 ---------------- */
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -553,6 +575,23 @@ document.addEventListener('DOMContentLoaded', async () => {
   $('post-cancel').addEventListener('click', () => { resetPostForm(); setStatus('post-status', ''); });
   $('book-submit').addEventListener('click', submitBook);
   $('image-submit').addEventListener('click', submitImage);
+
+  $('post-insert-image').addEventListener('click', () => $('post-image-file').click());
+  $('post-image-file').addEventListener('change', () => {
+    insertImageIntoPost($('post-image-file').files[0]);
+    $('post-image-file').value = '';
+  });
+  $('post-body').addEventListener('paste', (e) => {
+    const items = e.clipboardData && e.clipboardData.items;
+    if (!items) return;
+    const images = Array.from(items).filter((i) => i.type && i.type.startsWith('image/'));
+    if (!images.length) return;
+    e.preventDefault();
+    images.forEach((item) => {
+      const file = item.getAsFile();
+      if (file) insertImageIntoPost(file);
+    });
+  });
 
   document.querySelectorAll('.tab').forEach((tab) => {
     tab.addEventListener('click', () => {
